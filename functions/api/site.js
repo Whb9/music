@@ -1,11 +1,16 @@
-// GET/POST /api/site — full site data CRUD via EdgeOne KV
+// GET/POST /api/site — EdgeOne KV with embedded fallback data
+// Works immediately without KV setup. Add KV for persistence (admin edits).
+
 const SESSION_COOKIE = 'hbwlxy_session';
 const KV_KEY = 'site_data';
 
+// Embedded seed data — the site works without KV
+const SEED_DATA = {"site":{"schoolName":"湖北文理学院","collegeName":"音乐与舞蹈学院","title":"课程建设","logo":"/images/school-logo.png","campusImage":"/images/campus.jpg","schoolUrl":"https://www.hbuas.edu.cn","nav":[{"label":"学院概况","href":"/course/chorus-conducting"},{"label":"师资队伍","href":"/teachers/zhaowanyue"},{"label":"专业设置","href":"/course/chorus-conducting"},{"label":"课程建设","href":"/course/chorus-conducting"},{"label":"教学成果","href":"/course/chorus-conducting"},{"label":"艺术实践","href":"/course/chorus-conducting"}],"footer":{"links":[{"label":"音乐与舞蹈学院教务综合平台","href":"#"},{"label":"合唱蛙下载地址","href":"https://hechangwa.notetech.net/download/"},{"label":"合唱蛙使用手册","href":"https://hechangwa.notetech.net/link/pub-work"}],"address":"湖北省襄阳市隆中路296号","phone":"0710-3590216","postcode":"441053","wechat":"","email":""}},"teachers":[{"id":"zhaowanyue","name":"赵琬玥","title":"主讲教师","avatar":"/images/teacher.jpg","rank":"讲师","department":"音乐与舞蹈学院","bio":"赵琬玥，音乐与舞蹈学院教师，主要从事合唱与指挥方向的教学与研究工作。长期担任《合唱与指挥》课程主讲教师，积累了丰富的教学经验，带领学生参加多项省级及全国合唱比赛并取得优异成绩。","contact":""}],"courses":[{"id":"chorus-conducting","name":"合唱与指挥","category":"音乐学","subcategory":"声乐方向","teacherId":"zhaowanyue","coverImage":"/images/choir.jpg","description":"《合唱与指挥》是音乐学本科生声乐方向必修课程。本课程以视唱练耳、基本乐理、基础和声、合唱与指挥为理论基础，以声乐、钢琴等为技能基础。本课程以实践实训为主，注重培养学生合唱作品演唱、合唱排练、合唱团组织的能力，通过实训，着力学生团队意识的培养和审美能力的提升，为职业开展多声部声乐教学、中小学生群体音乐活动和专业可持续发展奠定基础。","objectives":"本课程主要传授合唱作品排练和指挥的基本技法，通过学习本课程了解合唱作品排练流程、内容、要点及基本形态和基本范式；掌握合唱团的组织，合唱作品分析实践能力；具备合唱作品的指挥与舞台实践能力等。\n在整个人才培养体系中，本课程的学习对学生的专业学习、学术研究、深造提升、音乐分析与多声部声乐作品创编、音乐创新实践与审美等知识融合等具有密切联系和较高支撑度。","keyPoints":"合唱演唱技巧、多声部音准训练、指挥图示与技法","difficulties":"多声部音准保持、指挥技法与情感表达的统一","chapters":[{"id":"chapter-1","title":"第一章：中国早期合唱艺术作品《送别》","requirements":"章节教学目标及教学要求：\n（一）章节教学目标\n1、知识目标（指标点2.3.1）\n（1）演唱1~2首中国早期合唱艺术作品\n（2）掌握中国早期合唱作品的风格和指挥要素\n2、能力目标（指标点2.3.2、2.4.2、2.8.2）\n（1）掌握中国早期合唱艺术作品文化背景和演唱要素\n（2）能够较好的按照风格，根据作品需要进行排演和指挥\n3、育人目标（支撑课程目标2.6.1、2.6.2）\n   通过中国早期合唱艺术作品的学习，了解中国早期合唱艺术作品蕴含的文化特征，增强文化自信。\n（二）教学内容\n作品根据学生专业能力和空间、实践特征选择\n（三）本章重/难点\n  重点：对中国早期合唱艺术作品文化背景的把握\n  难点：中国早期合唱艺术作品风格的把握\n（四）教学要求\n1、准确把握中国早期合唱艺术作品的风格和演唱特点\n2、能够完成作品排练。","background":"曲目背景：\n• 创作年份：1915年（有1914年等说法，以1915年最通行）。\n• 词作者：李叔同（弘一法师），中文填词。\n• 曲作者：约翰·庞德·奥特威（John Pond Ordway，美国），原曲为《梦见家和母亲》（Dreaming of Home and Mother）\n• 作者生平：原名李息霜，浙江平湖人，中国近代著名艺术家、教育家、高僧。早年留学日本，精通音乐、绘画、戏剧、书法等多个艺术领域，是中国现代音乐教育、话剧艺术的先驱。回国后先后任教于浙江第一师范学校、南京高等师范学校，培养了大批艺术人才。1918年在杭州虎跑寺出家，法号弘一，潜心佛学与艺术修行。\n• 创作背景：\n  1.时代背景：清末民初的离别之殇，社会动荡；民国初建、军阀混战，家国离乱、聚散无常成为常态。学堂乐歌兴起：新式学堂开设乐歌课，多以欧美/日本曲调填中文词，李叔同是核心推动者。个人境遇：李叔同归国后任教杭州，经历母丧、挚友离散、人生无常的多重感慨。\n  2. 创作缘起：送别挚友许幻园（广为流传）。天涯五友：李叔同与许幻园等五人在上海结为至交，同住城南草堂，诗酒唱和。雪中诀别：1915年冬，许幻园因家道中落、破产离沪，大雪中登门，仅说\"叔同兄，我家破产了，咱们后会有期\"，挥泪而去。含泪成词：李叔同雪中伫立目送，返家后以《旅愁》曲调填中文新词，写下\"长亭外，古道边\"，道尽知交零落、人生无常之悲。\n  3. 词曲演变（\"旧曲新填\"）：1851 美国奥特威→《梦见家和母亲》（思乡曲）；1907 日本犬童球溪→填日文《旅愁》（游子愁）；1908 李叔同留学日本→初译《旅愁》（\"西风起，秋渐深\"）；1915 李叔同杭州任教→重填《送别》（中文骊歌典范）。\n• 创作背景：《送别》是学堂乐歌的经典代表作，开创了借用外国曲调、融入中国古典诗词意境的创作模式。它兼具美育与情感教化价值，以传统离别意象寄托离愁与人生感慨，折射民初社会心境。作品格调清雅、意蕴深远，流传百年，成为国人送别、怀旧的经典文化符号，深远影响近现代音乐发展。","appreciation":"","practice":"","images":[],"videos":["/uploads/songbie_appreciation.mp4"]},{"id":"chapter-2","title":"第二章：国内革命战争时期作品《工农兵联合起来》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱国内革命战争时期经典合唱作品\n（2）掌握该时期作品的革命精神与演唱风格\n2、能力目标\n（1）掌握作品文化背景和演唱要素\n（2）能够带领合唱团进行基本排练\n3、育人目标\n   通过学习革命战争时期合唱作品，传承红色文化，弘扬革命精神。\n\n（二）教学内容\n作品根据学生专业能力和空间、实践特征选择\n\n（三）本章重/难点\n  重点：作品历史背景与精神内涵的理解\n  难点：演唱力度与集体配合\n\n（四）教学要求\n1、准确把握作品的革命风格和演唱特点\n2、能够完成基本排练。","background":"《工农兵联合起来》是国内革命战争时期的经典革命歌曲，反映了那个时代工人、农民、士兵团结一致、共同奋斗的时代精神。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-3","title":"第三章：抗战作品《保卫黄河》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱《保卫黄河》轮唱及齐唱部分\n（2）掌握抗战音乐的艺术特点\n2、能力目标\n（1）掌握多声部轮唱的基本技法\n（2）能够组织合唱团进行轮唱排练\n3、育人目标\n   通过抗战音乐学习，激发爱国主义情感，传承民族精神。\n\n（二）本章重/难点\n  重点：轮唱的准确进入与节奏控制\n  难点：多声部轮唱的协调统一\n\n（四）教学要求\n1、能够准确演唱各声部的轮唱旋律\n2、能够感受并表达作品的爱国主义精神。","background":"《保卫黄河》是冼星海《黄河大合唱》的第七乐章，作于1939年，表达了中华儿女同仇敌忾、保卫祖国的英雄气概。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-4","title":"第四章：抗美援朝合唱作品《我的祖国》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱《我的祖国》合唱版本\n（2）掌握作品的情感表达与演唱风格\n2、能力目标\n（1）能够在合唱团排练中把握速度与力度变化\n（2）具备指挥基本手势运用能力\n3、育人目标\n   通过学习，深刻理解志愿军战士的家国情怀，培养爱国主义精神。\n\n（三）本章重/难点\n  重点：两个对比段落的情感转换\n  难点：长乐句的气息支持\n\n（四）教学要求\n1、准确把握抒情段与进行段的风格对比\n2、能够完整演唱全曲。","background":"《我的祖国》是电影《上甘岭》的主题曲，1956年由乔羽作词、刘炽作曲，被誉为'最美的爱国歌曲'之一。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-5","title":"第五章：社会主义建设时期合唱作品《我们走在大路上》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱《我们走在大路上》\n（2）掌握社会主义建设时期音乐风格特征\n2、能力目标\n（1）把握进行曲体裁的节奏特点\n（2）能够有效组织合唱排练\n3、育人目标\n   通过学习，感受社会主义建设时期人民的奋斗精神。\n\n（三）本章重/难点\n  重点：进行曲节奏的准确把握\n  难点：各声部的音量平衡\n\n（四）教学要求\n1、节奏整齐，声音饱满有力\n2、能够完整演唱全曲。","background":"《我们走在大路上》由李劫夫作词作曲，创作于20世纪60年代，是社会主义建设时期精神风貌的生动写照。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-6","title":"第六章：改革开放时期合唱作品《在希望的田野上》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱《在希望的田野上》\n（2）了解改革开放时期音乐创作的特点\n2、能力目标\n（1）掌握民歌风格演唱的咬字吐字\n（2）能够把握轻快活泼的演唱风格\n3、育人目标\n   感受改革开放带来的生活变化，树立对美好生活的热爱与追求。\n\n（三）本章重/难点\n  重点：民间音乐风格的把握\n  难点：声部间的呼应与融合\n\n（四）教学要求\n1、声音明亮轻快\n2、民族风格鲜明。","background":"《在希望的田野上》由陈晓光作词、施光南作曲，1981年创作，是改革开放初期最具代表性的歌曲之一。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-7","title":"第七章：新时代合唱经典作品《灯火里的中国》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱《灯火里的中国》合唱版本\n（2）掌握新时代爱国主义歌曲的艺术特征\n2、能力目标\n（1）具备演唱长音、长乐句的气息控制能力\n（2）能够把握高潮部分的声音层次变化\n3、育人目标\n   通过学习，增强新时代中国特色社会主义的道路自信。\n\n（三）本章重/难点\n  重点：从柔和到宏大的层次变化\n  难点：高音区域的音色控制\n\n（四）教学要求\n1、音色圆润温暖\n2、情感真挚充沛。","background":"《灯火里的中国》由王平久作词、舒楠作曲，是2020年前后广为传播的新时代爱国主义歌曲，以'灯火'为意象寓意中华民族的光明前景。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-8","title":"第八章：原创合唱作品《追寻》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱原创合唱作品《追寻》\n（2）了解当代大学生原创音乐的创作特点\n2、能力目标\n（1）感受现代流行音乐元素与合唱艺术的融合\n（2）具备诠释当代青年情感的演唱能力\n3、育人目标\n   通过演唱，激发青年学子的奋斗精神和理想追求。\n\n（三）本章重/难点\n  重点：现代和声音程的准确演唱\n  难点：流行风格与艺术合唱的融合表达\n\n（四）教学要求\n1、声音清新自然\n2、情感真挚，展现青年活力。","background":"《追寻》是针对当代大学生群体创作的原创合唱作品，融合了流行音乐元素与合唱艺术特点，表达了青年学子积极进取、追求理想的精神面貌。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-9","title":"第九章：中外艺术合唱《牧歌》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱无伴奏混声合唱《牧歌》\n（2）了解内蒙古民歌《牧歌》的文化背景\n2、能力目标\n（1）掌握无伴奏合唱的音准保持方法\n（2）能够追求各声部的融合与统一\n3、育人目标\n   通过学习，感受中国民族音乐的独特魅力，增强文化认同。\n\n（三）本章重/难点\n  重点：无伴奏状态下的音准保持\n  难点：声部之间的音色融合\n\n（四）教学要求\n1、音准准确，音色统一\n2、旋律流畅歌唱。","background":"《牧歌》是内蒙古民歌，由美丽其格改词，瞿希贤改编为无伴奏混声合唱版后，成为中国合唱领域最经典的曲目之一。","appreciation":"","practice":"","images":[],"videos":[]},{"id":"chapter-10","title":"第十章：民歌中国《茉莉花》","requirements":"章节教学目标及教学要求：\n\n（一）章节教学目标\n1、知识目标\n（1）演唱合唱版《茉莉花》\n（2）了解《茉莉花》的历史传承与世界影响\n2、能力目标\n（1）掌握江南民歌的咬字行腔特点\n（2）能够表现含蓄优雅的东方音乐美感\n3、育人目标\n   通过学习，增强民族文化自豪感，传播中国音乐之美。\n\n（三）本章重/难点\n  重点：江南民歌的行腔韵味\n  难点：装饰音的演唱与声部融合\n\n（四）教学要求\n1、声音柔美流畅，咬字轻巧\n2、情感含蓄优雅。","background":"《茉莉花》是中国最著名的传统民歌之一，流传数百年。意大利作曲家普契尼在歌剧《图兰朵》中引用了这首旋律，使其走向世界，被誉为'中国的第二国歌'。","appreciation":"","practice":"","images":[],"videos":[]}]}]};
+
+// ── Auth helper ──
 async function verifyAuth(request, env) {
   const adminPassword = env.ADMIN_PASSWORD || 'hbwlxy123';
   const secret = env.SESSION_SECRET || 'hbwlxy_default_secret';
-
   const cookieHeader = request.headers.get('cookie') || '';
   const cookies = Object.fromEntries(
     cookieHeader.split('; ').filter(Boolean).map(c => {
@@ -14,36 +19,33 @@ async function verifyAuth(request, env) {
     })
   );
   const sessionToken = cookies[SESSION_COOKIE] || '';
-
   const encoder = new TextEncoder();
   const keyData = encoder.encode(secret + adminPassword);
   const hashBuffer = await crypto.subtle.digest('SHA-256', keyData);
   const expectedToken = Array.from(new Uint8Array(hashBuffer))
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
-
   return sessionToken === expectedToken;
 }
 
-function emptySiteData() {
-  return {
-    site: {
-      schoolName: '', collegeName: '', title: '',
-      logo: '', campusImage: '', schoolUrl: '',
-      nav: [{ label: '首页', href: '/' }],
-      footer: { links: [], address: '', phone: '', postcode: '', wechat: '', email: '' },
-    },
-    teachers: [],
-    courses: [],
-  };
+// ── Data access with KV fallback ──
+async function readData(env) {
+  try {
+    const kv = env.SITE_DATA;
+    if (kv) {
+      const raw = await kv.get(KV_KEY);
+      if (raw) return JSON.parse(raw);
+    }
+  } catch (_) { /* KV not configured, use seed data */ }
+  return SEED_DATA;
 }
 
+// ── Handler ──
 export async function onRequest({ request, env }) {
-  // GET: read site data
+  // GET: read site data (always works, even without KV)
   if (request.method === 'GET') {
     try {
-      const raw = await env.SITE_DATA.get(KV_KEY);
-      const data = raw ? JSON.parse(raw) : emptySiteData();
+      const data = await readData(env);
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { 'content-type': 'application/json' },
@@ -56,7 +58,7 @@ export async function onRequest({ request, env }) {
     }
   }
 
-  // POST: write site data (requires auth)
+  // POST: write site data (requires auth + KV)
   if (request.method === 'POST') {
     if (!(await verifyAuth(request, env))) {
       return new Response(JSON.stringify({ error: '未授权，请先登录' }), {
@@ -67,7 +69,13 @@ export async function onRequest({ request, env }) {
 
     try {
       const data = await request.json();
-      await env.SITE_DATA.put(KV_KEY, JSON.stringify(data));
+      const kv = env.SITE_DATA;
+      if (!kv) {
+        return new Response(JSON.stringify({
+          error: 'KV 存储未配置。请在 EdgeOne 控制台创建 KV 命名空间，并在 edgeone.json 中绑定为 SITE_DATA。',
+        }), { status: 500, headers: { 'content-type': 'application/json' } });
+      }
+      await kv.put(KV_KEY, JSON.stringify(data));
       return new Response(JSON.stringify({ success: true }), {
         status: 200,
         headers: { 'content-type': 'application/json' },

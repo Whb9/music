@@ -1,8 +1,7 @@
 {
-  "kv": [
-    {
-      "binding": "SITE_DATA",
-      "id": "PLACEHOLDER"
+  "functions": {
+    "api": {
+      "runtime": "edge"
     }
-  ]
+  }
 }

@@ -3,6 +3,7 @@
 /out/
 /.vercel/
 /.wrangler/
+/.edgeone/
 .DS_Store
 .env.local
 .dev.vars

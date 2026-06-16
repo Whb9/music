@@ -494,7 +494,7 @@ export default function CoursePage({ siteData, course, teacher }: PageProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { courseId } = context.params as { courseId: string };
-  const siteData = await readSiteData();
+  const siteData = await readSiteData(context.req);
   const course = siteData.courses.find(c => c.id === courseId);
   if (!course) return { notFound: true };
   const teacher = siteData.teachers.find(t => t.id === course.teacherId) ?? null;

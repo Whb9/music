@@ -1,6 +1,14 @@
 # 湖北文理学院 音乐与舞蹈学院 课程建设网站
 
-基于 Next.js 15 + Cloudflare Pages + D1 + R2 部署。
+基于 Next.js 15 + EdgeOne Pages + EdgeOne KV + COS 部署，国内访问无障碍。
+
+## 技术栈
+
+- **框架**: Next.js 15 (Pages Router)
+- **样式**: Tailwind CSS
+- **后端 API**: EdgeOne Edge Functions (`functions/api/`)
+- **数据存储**: EdgeOne KV
+- **文件存储**: 腾讯云 COS
 
 ## 本地开发
 
@@ -9,108 +17,101 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-后台入口: `/admin`，默认密码 `hbwlxy123`
+> 本地开发时 API 请求会 fallback 到 `localhost:3000`，需要将 `data/site.json` 的内容手动写入 EdgeOne KV 或暂时使用静态数据。
 
-## 部署到 Cloudflare Pages
+## 部署到 EdgeOne Pages
 
-### 1. 前置准备
-
-```bash
-# 安装 wrangler CLI
-npm install -g wrangler
-
-# 登录 Cloudflare
-wrangler login
-```
-
-### 2. 创建 Cloudflare 资源
+### 1. 准备工作
 
 ```bash
-# 创建 D1 数据库（记录返回的 database_id）
-wrangler d1 create hbwlxy-db
+# 安装 EdgeOne CLI
+npm install -g edgeone
 
-# 创建 R2 存储桶（文件上传）
-wrangler r2 bucket create hbwlxy-uploads
-
-# 初始化数据库表结构
-wrangler d1 execute hbwlxy-db --file=./db/init.sql
-
-# 导入种子数据
-wrangler d1 execute hbwlxy-db --file=./db/seed.sql
+# 登录腾讯云
+edgeone login
 ```
 
-### 3. 更新 wrangler.toml
+### 2. 创建 KV 存储
 
-将 `wrangler.toml` 中的 `database_id` 替换为步骤 2 创建 D1 时返回的实际 ID:
+在 EdgeOne 控制台 → KV 存储 → 创建命名空间（名称任意，如 `site-kv`），记录 **命名空间 ID**。
 
-```toml
-[[d1_databases]]
-binding = "DB"
-database_name = "hbwlxy-db"
-database_id = "你的实际ID"  # ← 替换这里
-```
+### 3. 初始化种子数据
 
-### 4. 设置环境变量
+将 `data/site.json` 的内容作为 KV 数据写入：
+- Key: `site_data`
+- Value: `data/site.json` 的完整 JSON 内容
+
+可以在控制台直接添加，或通过 EdgeOne CLI 写入。
+
+### 4. 配置 COS（可选，用于文件上传）
+
+在腾讯云控制台创建 COS 存储桶，然后在 EdgeOne Pages 项目设置中添加环境变量:
+
+| 变量 | 说明 |
+|------|------|
+| `COS_SECRET_ID` | 腾讯云 API SecretId |
+| `COS_SECRET_KEY` | 腾讯云 API SecretKey |
+| `COS_BUCKET` | COS 存储桶名称 |
+| `COS_REGION` | COS 地域（如 `ap-guangzhou`） |
+
+### 5. 设置环境变量
+
+在 EdgeOne Pages 项目设置中添加:
+
+| 变量 | 说明 |
+|------|------|
+| `ADMIN_PASSWORD` | 后台管理密码 |
+| `SESSION_SECRET` | 会话加密密钥（随机字符串） |
+
+### 6. 更新 edgeone.json
+
+将 `edgeone.json` 中的 `"id": "PLACEHOLDER"` 替换为步骤 2 创建的 KV 命名空间 ID。
+
+### 7. 部署
 
 ```bash
-wrangler secret put ADMIN_PASSWORD
-wrangler secret put SESSION_SECRET
+# Git 部署：推送代码到 GitHub/Gitee，在 EdgeOne 控制台连接仓库
+
+# 或直接部署：
+edgeone pages deploy . -n hbwlxy-music
 ```
 
-### 5. 推送代码并部署
+EdgeOne Pages 会自动识别 Next.js 框架，构建并部署。
 
-```bash
-# 推送到 GitHub
-git add -A && git commit -m "Cloudflare Pages migration"
-git remote add origin <你的GitHub仓库>
-git push -u origin main
+### 8. 绑定自定义域名
 
-# 在 Cloudflare Pages Dashboard 中:
-# 1. 连接 GitHub 仓库
-# 2. 框架预设: Next.js
-# 3. 构建命令: npx @cloudflare/next-on-pages
-# 4. 构建输出目录: .vercel/output/static
-# 5. 绑定 D1 变量名: DB (database_id 自动从 wrangler.toml 读取)
-# 6. 绑定 R2 变量名: UPLOADS
-```
-
-### 6. 或直接部署
-
-```bash
-npm run cf:deploy
-```
-
-## 技术栈
-
-- **框架**: Next.js 15 (Pages Router)
-- **样式**: Tailwind CSS
-- **数据**: Cloudflare D1 (SQLite)
-- **文件**: Cloudflare R2
-- **函数**: Cloudflare Pages Functions (via @cloudflare/next-on-pages)
+在 EdgeOne 控制台绑定 `hbwlxy-music.com`（需先在腾讯云购买并备案域名），国内用户即可通过自定义域名访问。
 
 ## 目录结构
 
 ```
 hbwlxy-music/
-├── data/site.json        # 原始种子数据（部署后不再直接读写）
-├── db/init.sql           # D1 建表语句
-├── db/seed.sql           # D1 种子数据
-├── public/               # 静态资源
-│   ├── images/           # 图片
-│   ├── videos/           # 视频
-│   ├── uploads/          # 上传文件（仅用于本地开发）
-│   └── pitch-to-score.html  # 音高识别页面
+├── data/site.json          # 种子数据（部署时导入 KV，线上不再直接读取）
+├── functions/api/          # EdgeOne Edge Functions（后端 API）
+│   ├── auth/
+│   │   ├── login.js        # POST /api/auth/login
+│   │   ├── check.js        # GET  /api/auth/check
+│   │   └── logout.js       # POST /api/auth/logout
+│   ├── site.js             # GET/POST /api/site
+│   ├── upload.js           # POST /api/upload → COS
+│   ├── import-data.js      # POST /api/import-data
+│   └── uploads/[key].js    # GET  /api/uploads/:key → COS
+├── public/                 # 静态资源
+│   ├── images/             # 图片
+│   ├── videos/             # 视频
+│   ├── uploads/            # 已上传的文件
+│   └── pitch-to-score.html # 音高识别页面
 ├── src/
-│   ├── components/       # React 组件
+│   ├── components/         # React 组件
 │   ├── lib/
-│   │   ├── auth.ts       # 认证（Web Crypto）
-│   │   └── data.ts       # 数据层（D1）
-│   ├── pages/
-│   │   ├── admin/        # 后台管理
-│   │   ├── api/          # API 路由 → Cloudflare Functions
-│   │   ├── course/       # 课程页面
-│   │   └── teachers/     # 教师页面
-│   └── types/            # TypeScript 类型
-├── wrangler.toml         # Cloudflare 配置
+│   │   ├── auth.ts         # 认证（调用 Edge Functions API）
+│   │   └── data.ts         # 数据层（调用 Edge Functions API）
+│   ├── pages/              # Next.js 页面
+│   └── types/              # TypeScript 类型
+├── edgeone.json            # EdgeOne 配置（KV 绑定）
 └── package.json
 ```
+
+## 后台管理
+
+访问 `/admin`，默认密码 `hbwlxy123`（通过环境变量 `ADMIN_PASSWORD` 修改）。

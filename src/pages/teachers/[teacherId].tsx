@@ -109,7 +109,7 @@ export default function TeacherPage({ siteData, teacher }: TeacherPageProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { teacherId } = context.params as { teacherId: string };
-  const siteData = await readSiteData();
+  const siteData = await readSiteData(context.req);
   const teacher = siteData.teachers.find(t => t.id === teacherId);
   if (!teacher) return { notFound: true };
   return { props: { siteData, teacher } };

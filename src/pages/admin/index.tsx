@@ -41,7 +41,7 @@ export default function AdminPage({ authenticated, initialData }: AdminPageProps
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const authenticated = await verifySession(context.req);
-  const initialData = authenticated ? await readSiteData() : null;
+  const initialData = authenticated ? await readSiteData(context.req) : null;
 
   return {
     props: {

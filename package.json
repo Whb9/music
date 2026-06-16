@@ -1,0 +1,37 @@
+{
+  "name": "hbwlxy-music",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "cf:build": "npx @cloudflare/next-on-pages",
+    "cf:deploy": "npx @cloudflare/next-on-pages && wrangler pages deploy",
+    "cf:dev": "wrangler pages dev .vercel/output/static --port 8788",
+    "db:init": "wrangler d1 execute hbwlxy-db --file=./db/init.sql",
+    "db:seed": "wrangler d1 execute hbwlxy-db --file=./db/seed.sql",
+    "db:init-local": "wrangler d1 execute hbwlxy-db --file=./db/init.sql --local",
+    "db:seed-local": "wrangler d1 execute hbwlxy-db --file=./db/seed.sql --local"
+  },
+  "dependencies": {
+    "cookie": "^0.6.0",
+    "next": "^15.1.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@cloudflare/workers-types": "^4.20260616.1",
+    "@types/cookie": "^0.6.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

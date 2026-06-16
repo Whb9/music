@@ -1,0 +1,31 @@
+# Cloudflare Pages + Functions configuration
+# Run `wrangler d1 create hbwlxy-db` to get the database_id, then fill it below.
+
+name = "hbwlxy-music"
+compatibility_date = "2025-06-16"
+pages_build_output_dir = ".vercel/output/static"
+
+# ── D1 Database ──────────────────────────────────────────────
+# After running: wrangler d1 create hbwlxy-db
+# Copy the returned database_id here:
+[[d1_databases]]
+binding = "DB"
+database_name = "hbwlxy-db"
+database_id = "PLACEHOLDER"  # ← replace with actual ID from `wrangler d1 create hbwlxy-db`
+
+# ── R2 Bucket (file uploads) ─────────────────────────────────
+# After running: wrangler r2 bucket create hbwlxy-uploads
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "hbwlxy-uploads"
+
+# ── Environment variables ────────────────────────────────────
+# Set secrets via: wrangler secret put ADMIN_PASSWORD
+#                  wrangler secret put SESSION_SECRET
+# For local dev, create .dev.vars:
+#   ADMIN_PASSWORD=hbwlxy123
+#   SESSION_SECRET=your_random_secret
+
+# ── Dev ──────────────────────────────────────────────────────
+[dev]
+port = 8788

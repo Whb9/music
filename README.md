@@ -21,26 +21,6 @@ npm run dev        # http://localhost:3000
 
 ## 一键部署
 
-### 方式一：GitHub 自动部署（推荐）
-
-每次推送到 `master` 分支自动构建部署，无需手动操作。
-
-1. 在 EdgeOne 控制台 → 设置 → API Token → 生成一个 Token
-2. 在 GitHub 仓库 → Settings → Secrets and variables → Actions → 添加：
-   - **Name**: `EDGEONE_API_TOKEN`
-   - **Value**: 上一步生成的 Token
-3. 推送代码：
-
-```bash
-git push origin master
-```
-
-4. 在 GitHub Actions 标签页查看部署进度，完成后即可访问。
-
-> 也可在 Actions 标签页手动触发 `workflow_dispatch` 部署。
-
-### 方式二：本地一键部署
-
 ```bash
 # 首次准备（只需一次）
 npm install -g edgeone    # 安装 EdgeOne CLI
@@ -122,8 +102,6 @@ hbwlxy-music/
 │   └── types/                # TypeScript 类型
 ├── scripts/
 │   └── seed-kv.mjs           # KV 初始化脚本
-├── .github/workflows/
-│   └── deploy.yml            # GitHub Actions 自动部署
 ├── edgeone.json              # EdgeOne 配置（KV 绑定）
 ├── .env.example              # 环境变量模板
 └── package.json

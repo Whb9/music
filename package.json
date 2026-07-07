@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "edgeone pages deploy -n hbwlxy-music",
+    "deploy:prod": "edgeone pages deploy -n hbwlxy-music -e production",
+    "deploy:seed-kv": "node scripts/seed-kv.mjs"
   },
   "dependencies": {
     "next": "^15.1.5",

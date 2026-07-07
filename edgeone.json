@@ -3,10 +3,5 @@
     "api": {
       "runtime": "edge"
     }
-  },
-  "kv": {
-    "SITE_DATA": {
-      "id": "PLACEHOLDER"
-    }
   }
 }

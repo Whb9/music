@@ -1,5 +1,5 @@
 // src/lib/data.ts
-// EdgeOne edition — fetches from Edge Functions API. Falls back to local JSON in dev.
+// EdgeOne edition — fetches from Edge Functions API. Falls back to local JSON.
 
 import type { SiteData } from '@/types';
 import fs from 'fs';
@@ -14,17 +14,10 @@ function apiBase(): string {
   return process.env.SITE_URL || 'http://localhost:3000';
 }
 
-function isLocalDev(req?: { headers: Record<string, string | string[] | undefined> }): boolean {
-  if (req) {
-    const host = (req.headers.host as string) || '';
-    return host.includes('localhost') || host.includes('127.0.0.1');
-  }
-  return typeof window === 'undefined' && !process.env.SITE_URL;
-}
-
 export async function readSiteData(req?: { headers: Record<string, string | string[] | undefined> }): Promise<SiteData> {
-  // Local dev: read directly from file (no Edge Functions available)
-  if (isLocalDev(req)) {
+  // Server-side (SSR / getServerSideProps): read directly from file system.
+  // Avoids self-referential HTTP fetch that fails on EdgeOne runtime.
+  if (typeof window === 'undefined') {
     try {
       const raw = fs.readFileSync(LOCAL_DATA_FILE, 'utf-8');
       return JSON.parse(raw) as SiteData;
@@ -33,15 +26,8 @@ export async function readSiteData(req?: { headers: Record<string, string | stri
     }
   }
 
-  // Production: fetch from Edge Functions API (same domain, no CORS)
-  let base = apiBase();
-  if (req) {
-    const host = (req.headers.host as string) || 'localhost:3000';
-    const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
-    base = `${proto}://${host}`;
-  }
-
-  const res = await fetch(`${base}/api/site`);
+  // Client-side: fetch from Edge Functions API (same domain, no CORS)
+  const res = await fetch('/api/site');
   if (!res.ok) {
     throw new Error(`API error: ${res.status}`);
   }

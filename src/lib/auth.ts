@@ -1,25 +1,19 @@
 // src/lib/auth.ts
 // EdgeOne edition — delegates auth to Edge Functions API
 
-import type { IncomingMessage } from 'http';
-
-function apiBase(req?: IncomingMessage): string {
-  if (req) {
-    const host = req.headers.host || 'localhost:3000';
-    const proto = (req.headers['x-forwarded-proto'] as string) || 'http';
-    return `${proto}://${host}`;
+// verifySession is called from getServerSideProps. On EdgeOne, SSR cannot
+// self-fetch edge functions, so we return false (not authenticated) server-side.
+// The admin page uses a client-side useEffect to re-check auth after mount.
+export async function verifySession(_req?: unknown): Promise<boolean> {
+  // Server-side (SSR): self-referential HTTP fetch may fail on EdgeOne.
+  // Default to not authenticated; client-side JS will handle login state.
+  if (typeof window === 'undefined') {
+    return false;
   }
-  return '';
-}
 
-export async function verifySession(req: IncomingMessage): Promise<boolean> {
-  const base = apiBase(req);
-
-  // Forward the cookie from the incoming request
-  const cookieHeader = req.headers.cookie || '';
-
-  const res = await fetch(`${base}/api/auth/check`, {
-    headers: cookieHeader ? { cookie: cookieHeader } : {},
+  // Client-side: verify via Edge Functions API
+  const res = await fetch('/api/auth/check', {
+    credentials: 'include',
   });
 
   if (!res.ok) return false;
